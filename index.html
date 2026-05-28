@@ -1,3 +1,71 @@
+    <script>
+        function filterTricks() {
+            let input = document.getElementById('searchTricks').value.toLowerCase();
+            let cards = document.getElementsByClassName('card');
+            
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                let desc = cards[i].getElementsByTagName('p')[0].innerText.toLowerCase();
+                
+                if (title.includes(input) || desc.includes(input)) {
+                    cards[i].style.display = "block";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+
+        function rateApp(starsClicked) {
+            let stars = document.getElementsByClassName('star');
+            for (let i = 0; i < stars.length; i++) {
+                if (i < starsClicked) {
+                    stars[i].classList.add('active');
+                } else {
+                    stars[i].classList.remove('active');
+                }
+            }
+            document.getElementById('thankYouMessage').style.display = 'block';
+        }
+
+        // 🔊 AUDIO SOURCE
+        let thankYouAudio = new Audio("https://dict.youdao.com/dictvoice?audio=Thank+you+Samarth&type=2");
+
+        function toggleLike(button) {
+            let countSpan = button.querySelector('.count');
+            let currentCount = parseInt(countSpan.innerText);
+            
+            // INSTANT COLOR CHANGE (Zabardasti usi waqt active karega)
+            if (button.classList.contains('liked')) {
+                button.classList.remove('liked');
+                countSpan.innerText = currentCount - 1;
+            } else {
+                button.classList.add('liked');
+                countSpan.innerText = currentCount + 1;
+                
+                // 1. Instant Pop-up Action
+                let toast = document.getElementById('toastNotification');
+                toast.classList.add('show');
+                
+                // Clear existing timeout if any to avoid overlapping
+                if(window.toastTimeout) clearTimeout(window.toastTimeout);
+                
+                window.toastTimeout = setTimeout(() => { 
+                    toast.classList.remove('show'); 
+                }, 2500);
+
+                // 2. Play Audio
+                thankYouAudio.currentTime = 0;
+                thankYouAudio.play().catch(function(error) {
+                    console.log("Audio waiting for user gesture.");
+                });
+            }
+        }
+
+        function shareTrick() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("App Link Copied! Apne dosto ke sath share karein. 🚀");
+        }
+    </script>
 <!DOCTYPE html>
 <html lang="hi">
 <head>
