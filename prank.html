@@ -190,6 +190,241 @@
         ];
 
         function startPrankFlow() {
+            // Hide Button, Show Loader
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('loaderBox').style.display = 'block';
+
+            let percentage = 0;
+            const percentText = document.getElementById('loadingPercentage');
+
+            // Exact 60 seconds (1 minute) loading timer
+            const loaderInterval = setInterval(() => {
+                percentage++;
+                percentText.innerHTML = `Processing files... ${percentage}%`;
+
+                if (percentage >= 100) {
+                    clearInterval(loaderInterval);
+                    runMatrixCoding();
+                }
+            }, 600); // 600ms * 100 = 60000ms (60 seconds)
+        }
+
+        function runMatrixCoding() {
+            // Hide main interface and trigger terminal screen
+            document.getElementById('mainBox').style.display = 'none';
+            const matrix = document.getElementById('matrixScreen');
+            matrix.style.display = 'block';
+
+            let lineCount = 0;
+            
+            // Generate continuous high-speed terminal logs
+            const codeInterval = setInterval(() => {
+                let randomLog = logs[Math.floor(Math.random() * logs.length)];
+                let randomHex = Math.random().toString(16).substring(2, 10).toUpperCase();
+                
+                matrix.innerHTML += `<div style="color: #00ff00;">[SYS_EXEC] ${randomLog} -> [HEX_${randomHex}]</div>`;
+                window.scrollTo(0, document.body.scrollHeight);
+                lineCount++;
+
+                // After printing 25 lines of fast code, print Success and show pop-up
+                if (lineCount > 25) {
+                    clearInterval(codeInterval);
+                    
+                    matrix.innerHTML += `<br><div style="color: #fff; background: #005500; padding: 10px; font-weight: bold; border: 1px solid #00ff00; text-align: center; font-size: 16px;">✅ DATA COPIED SUCCESSFULLY!</div>`;
+                    
+                    // Show final prank pop-up exactly
+                    <!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Optimizer Pro</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        body {
+            background-color: #0a0a0a;
+            color: #00ff00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #111;
+            padding: 30px;
+            border-radius: 16px;
+            border: 2px solid #333;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            transition: all 0.3s;
+        }
+        h1 {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 1 Minute Loading Circle */
+        .loader-box {
+            display: none;
+        }
+        .circle-loader {
+            width: 80px;
+            height: 80px;
+            border: 5px solid #222;
+            border-top: 5px solid #00ff00;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status-text {
+            font-size: 16px;
+            color: #00ff00;
+        }
+
+        /* Matrix Coding Screen */
+        #matrixScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: hidden;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.5;
+            z-index: 999;
+        }
+
+        /* Prank Pop-up Style */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .prank-popup {
+            background: #111;
+            border: 3px solid #ff0055;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(255, 0, 85, 0.5);
+        }
+        .prank-popup h2 {
+            color: #ff0055;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .prank-popup p {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+        .close-btn {
+            background: #ff0055;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 0, 85, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainBox">
+        <h1>System Optimizer Pro</h1>
+        <p>Deep clean background junk files and boost performance instantly.</p>
+        
+        <button class="btn" id="startBtn" onclick="startPrankFlow()">🚀 Start Optimization</button>
+
+        <div class="loader-box" id="loaderBox">
+            <div class="circle-loader"></div>
+            <div class="status-text" id="loadingPercentage">Processing files... 0%</div>
+        </div>
+    </div>
+
+    <div id="matrixScreen"></div>
+
+    <div class="popup-overlay" id="prankOverlay">
+        <div class="prank-popup">
+            <h2>😜 Prank Hogya!</h2>
+            <p>Chill bhai! Koi data copy nahi hua hai. Yeh bas ek mazedaar script thi jo Samarth ne banayi hai! Code king! 👑</p>
+            <button class="close-btn" onclick="location.reload()">🔥 Khatarnak Tha!</button>
+        </div>
+    </div>
+
+    <script>
+        const logs = [
+            "Connecting to core kernel stream...",
+            "Bypassing safe partition tables...",
+            "Fetching storage directory paths...",
+            "Reading contacts database structures...",
+            "Analyzing secure media vaults...",
+            "Injecting temporary copy stream protocol...",
+            "Hex dump match found: 0x4A 0x6C 0x8F",
+            "Duplicating encryption tokens...",
+            "Syncing localized storage mirrors...",
+            "Executing background data dump sequence..."
+        ];
+
+        function startPrankFlow() {
             document.getElementById('startBtn').style.display = 'none';
             document.getElementById('loaderBox').style.display = 'block';
 
