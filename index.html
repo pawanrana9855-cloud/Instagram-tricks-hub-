@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeoli Map & Directory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            padding: 12px;
+        }
+        header {
+            text-align: center;
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            padding: 20px 16px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.15);
+        }
+        header h1 {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        header p {
+            color: #93c5fd;
+            font-size: 12px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 18px;
+            font-size: 14px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .directory-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        /* EK LINE WALA FLAT ROW DESIGN */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            display: flex; /* Photo left me, details right me ek sath */
+            align-items: center;
+            height: 125px; 
+        }
+        .card-img-container {
+            position: relative;
+            width: 120px;
+            min-width: 120px;
+            height: 100%;
+            background-color: #f1f5f9;
+        }
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .status-badge {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 2px 0;
+            text-align: center;
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .card-content {
+            padding: 10px 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .category {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 4px;
+            align-self: flex-start;
+        }
+        .cat-edu { background: #e0f2fe; color: #0369a1; }
+        .cat-shop { background: #fef3c7; color: #d97706; }
+        .cat-food { background: #dcfce7; color: #15803d; }
+        .cat-rel { background: #f3e8ff; color: #7e22ce; }
+        .cat-open { background: #f1f5f9; color: #475569; }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .info-text {
+            font-size: 11px;
+            color: #475569;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .info-text b {
+            color: #1e293b;
+        }
+        .btn-call {
+            align-self: flex-start;
+            background-color: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .btn-call:active {
+            background-color: #059669;
+        }
+        .no-results {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Jeoli Map & Directory</h1>
+        <p>Gaon ki sabhi shops aur places ki live suchi</p>
+        <input type="text" id="searchInput" class="search-box" placeholder="Kuch bhi search karein..." onkeyup="filterPlaces()">
+    </header>
+
+    <div class="directory-container">
+
+        <div class="card" data-search="kalpana public school education study school building sonia mam">
+            <div class="card-img-container">
+                <img src="https://i.ibb.co/v4mYg5N/school-building.jpg" onerror="this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=300'" alt="Kalpana Public School">
+            </div>
+            <div class="card-content">
+                <span class="category cat-edu">🏫 Education</span>
+                <h2 class="card-title">Kalpana Public School</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">📞 <b>No:</b> 07162 292 973</p>
+                <a href="tel:07162292973" class="btn-call">📞 Call Now</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="gurdwara rangila sahib ji religious temple sikh bhakti">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1609137144813-90d6350d4ff3?w=300" alt="Gurdwara Sahib">
+            </div>
+            <div class="card-content">
+                <span class="category cat-rel">✨ Religious Place</span>
+                <h2 class="card-title">Gurdwara Rangila Sahib</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">⭐ Shanti Aur Bhakti Sthal</p>
+            </div>
+        </div>
+
+        <div class="card" data-search="muskan medical store gupta karyana dukan medicine ration">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=300" alt="Shops">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🛍️ Shopping / Market</span>
+                <h2 class="card-title">Muskan Medical & Gupta</h2>
+                <p class="info-text">📍 <b>Pata:</b> Main Market, Jeoli</p>
+                <p class="info-text">📦 Dawaai aur Ration Available</p>
+            </div>
+        </div>
+
+        <div class="card" data-search="arun footwear saini hardware sonu auto repair shoes repair chappal">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1531287333318-ab934426543b?w=300" alt="Market Building">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🛍️ Hardware & Shoes</span>
+                <h2 class="card-title">Arun Footwear & Saini</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">📞 <b>No:</b> 95012 76083</p>
+                <a href="tel:9501276083" class="btn-call">📞 Call Now</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="lucky electronic shop tv fridge fan repair">
+            <div class="card-img-container">
+                <span class="status-badge">Unavailable</span>
+                <img src="https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=300" alt="Lucky Electronic">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🔌 Electronics</span>
+                <h2 class="card-title">Lucky Electronic</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">📞 <b>No:</b> 99153 19847</p>
+                <a href="tel:9915319847" class="btn-call">📞 Call Now</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="amrit fast food restaurant burger manchurian chowmein noodles">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" alt="Amrit Fast Food">
+            </div>
+            <div class="card-content">
+                <span class="category cat-food">🍔 Food / Restaurant</span>
+                <h2 class="card-title">Amrit Fast Food</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab</p>
+                <p class="info-text">📞 <b>No:</b> 97797 75518</p>
+                <a href="tel:9779775518" class="btn-call">📞 Order Food</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="dal chand tailor kapde kapda suit stitching clothes">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1524234107056-1c1f48f64ab8?w=300" alt="Tailor Shop">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🪡 Tailor / Clothing</span>
+                <h2 class="card-title">Dal Chand Tailor</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">🪡 Professional Stitching</p>
+            </div>
+        </div>
+
+        <div class="card" data-search="jeoli open field ground farming green">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=300" alt="Open Field">
+            </div>
+            <div class="card-content">
+                <span class="category cat-open">🌳 Open Area</span>
+                <h2 class="card-title">Jeoli Open Field Area</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli Village Area</p>
+                <p class="info-text">🌿 Green Farming Fields</p>
+            </div>
+        </div>
+
+        <div id="noResults" class="no-results">Koi jagah nahi mili! 🔍</div>
+    </div>
+
+    <script>
+        function filterPlaces() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('card');
+            let noResults = document.getElementById('noResults');
+            let anyVisible = false;
+
+            for (let i = 0; i < cards.length; i++) {
+                let searchTerms = cards[i].getAttribute('data-search');
+                if (searchTerms.includes(input)) {
+                    cards[i].style.display = "flex";
+                    anyVisible = true;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+            noResults.style.display = anyVisible ? "none" : "block";
+        }
+    </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeoli Map & Directory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 12px;
+        }
+        header {
+            text-align: center;
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            padding: 24px 16px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.15);
+        }
+        header h1 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        header p {
+            color: #93c5fd;
+            font-size: 13px;
+            margin-bottom: 14px;
+            font-weight: 500;
+        }
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            font-size: 15px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .directory-container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            margin-bottom: 14px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-img-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background-color: #e2e8f0;
+        }
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ef4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .card-content {
+            padding: 14px;
+        }
+        .category {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .cat-edu { background: #e0f2fe; color: #0369a1; }
+        .cat-shop { background: #fef3c7; color: #d97706; }
+        .cat-food { background: #dcfce7; color: #15803d; }
+        .cat-rel { background: #f3e8ff; color: #7e22ce; }
+        .cat-open { background: #f1f5f9; color: #475569; }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+        .info-text {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .info-text b {
+            color: #1e293b;
+        }
+        .btn-call {
+            display: block;
+            text-align: center;
+            background-color: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .btn-call:active {
+            background-color: #059669;
+        }
+        .no-results {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Jeoli Map & Directory</h1>
+        <p>Gaon ki sabhi shops aur places ki live suchi</p>
+        <input type="text" id="searchInput" class="search-box" placeholder="Koshish karein search karne ki..." onkeyup="filterPlaces()">
+    </header>
+
+    <div class="directory-container">
+
+        <div class="card" data-search="kalpana public school education study">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=500" alt="Kalpana Public School">
+            </div>
+            <div class="card-content">
+                <span class="category cat-edu">🏫 Education</span>
+                <h2 class="card-title">Kalpana Public School</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">📞 <b>Phone:</b> 07162 292 973</p>
+                <a href="tel:07162292973" class="btn-call">📞 Call Now</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="gurdwara rangila sahib ji religious temple sikh bhakti">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1609137144813-90d6350d4ff3?w=500" alt="Gurdwara Sahib">
+            </div>
+            <div class="card-content">
+                <span class="category cat-rel">✨ Religious Place</span>
+                <h2 class="card-title">Gurdwara Rangila Sahib Ji</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+            </div>
+        </div>
+
+        <div class="card" data-search="muskan medical store gupta karyana dukan medicine ration">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=500" alt="Shops">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🛍️ Shopping / Market</span>
+                <h2 class="card-title">Muskan Medical & Gupta Karyana</h2>
+                <p class="info-text">📍 <b>Pata:</b> Near Main Market, Jeoli, Punjab - 140506</p>
+            </div>
+        </div>
+
+        <div class="card" data-search="arun footwear saini hardware sonu auto repair shoes repair chappal">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1531287333318-ab934426543b?w=500" alt="Market Building">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🛍️ Hardware & Shoes</span>
+                <h2 class="card-title">Arun Footwear & Saini Hardware</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">📞 <b>Hardware No:</b> 95012 76083</p>
+                <a href="tel:9501276083" class="btn-call">📞 Call Hardware</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="lucky electronic shop tv fridge fan repair">
+            <div class="card-img-container">
+                <span class="status-badge">Currently Unavailable</span>
+                <img src="https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=500" alt="Lucky Electronic">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🔌 Electronics</span>
+                <h2 class="card-title">Lucky Electronic</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">📞 <b>Phone:</b> 99153 19847</p>
+                <a href="tel:9915319847" class="btn-call">📞 Call Now</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="amrit fast food restaurant burger manchurian chowmein noodles">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500" alt="Amrit Fast Food">
+            </div>
+            <div class="card-content">
+                <span class="category cat-food">🍔 Food / Restaurant</span>
+                <h2 class="card-title">Amrit Fast Food</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+                <p class="info-text">📞 <b>Phone:</b> 97797 75518, 97793 40049</p>
+                <a href="tel:9779775518" class="btn-call">📞 Call Now</a>
+            </div>
+        </div>
+
+        <div class="card" data-search="dal chand tailor kapde kapda suit stitching clothes">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1524234107056-1c1f48f64ab8?w=500" alt="Tailor Shop">
+            </div>
+            <div class="card-content">
+                <span class="category cat-shop">🪡 Tailor / Clothing</span>
+                <h2 class="card-title">Dal Chand Tailor</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab - 140506</p>
+            </div>
+        </div>
+
+        <div class="card" data-search="jeoli open field ground farming green">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500" alt="Open Field">
+            </div>
+            <div class="card-content">
+                <span class="category cat-open">🌳 Open Area / Ground</span>
+                <h2 class="card-title">Jeoli Open Field Area</h2>
+                <p class="info-text">📍 <b>Pata:</b> Jeoli, Punjab</p>
+            </div>
+        </div>
+
+        <div id="noResults" class="no-results">Koi jagah nahi mili! 🔍</div>
+    </div>
+
+    <script>
+        function filterPlaces() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('card');
+            let noResults = document.getElementById('noResults');
+            let anyVisible = false;
+
+            for (let i = 0; i < cards.length; i++) {
+                let searchTerms = cards[i].getAttribute('data-search');
+                if (searchTerms.includes(input)) {
+                    cards[i].style.display = "flex";
+                    anyVisible = true;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+            noResults.style.display = anyVisible ? "none" : "block";
+        }
+    </script>
+
+</body>
+</html>
